@@ -4,6 +4,7 @@ import {View, TouchableOpacity, Text, TextInput, StyleSheet, Alert, Modal, Scrol
 //import SantaAnimation from '../components/Santa.js';
 import firebase from 'firebase';
 import {RFValue} from 'react-native-responsive-fontsize'
+//second screen - actually works
 
 export default class WelcomeScreen extends React.Component {
     constructor(){
