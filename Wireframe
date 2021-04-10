@@ -1,0 +1,37 @@
+/*
+WIREFRAME
+Screens : 
+  #Bottom Tab Navigator
+  1. Home Screen (Where the main feed/gallary loads)
+  2. Post Screen (Where a person a post the image, along with whatever text/caption)
+  3. Welcome Screen (for logging in, and adding the school code to get posts from your classmates)
+
+  #Sidebar
+  1. Settings
+  2. My Posts
+  (+ The Profile Pic)
+
+Main Functionality:
+  1. The person should be able to use the Post/New Screen to post their image, with the link and whatever 
+    caption they want.
+  2. Their image should appear on the Home Screen along with other pictures in an innovative manner
+    (EG. there could be rows of 3 then 2 and so on + at the middle of every post on the top, there can 
+      be an image of a piece of tape to make it look as though its been put up!)
+  3. The user should be abe to see all their posts on the 'my posts' screen.
+  4. On the homescreen, a person will be able to view the entire post with the content by simply clicking
+    on it, or maybe on a view button on the bottom left corner.
+  5. The name of the person who posted it can also appear at the bottom!
+  6. The user can choose whether to make their post anonymous of have it under their name!
+
+Backgrounds:
+  1. I can make the backgrounds
+  2. Use backgrounds from the Internet.
+
+User Experience:
+1. Feedback
+2. Same layout on all the screens
+3. Successful/ not messages
+4. Clearly defined Goal
+
+
+*/
