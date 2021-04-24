@@ -38,7 +38,7 @@ export const TabNavigator = createBottomTabNavigator({
         />,
            
 
-            tabBarLabel : "HI"
+            tabBarLabel : " "
         }
   
     },

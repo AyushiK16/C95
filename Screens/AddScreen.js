@@ -17,7 +17,8 @@ export default class AddScreen extends React.Component{
       caption : '',
       description : '',
       identifier : '',
-      docId : ''
+      docId : '',
+      type : ' '
 
     }
   }
@@ -41,40 +42,60 @@ export default class AddScreen extends React.Component{
       quality : 1
     })
 
+
     if(!cancelled){
+      var index = uri.lastIndexOf('.')
+      var str1 = uri.slice(index, uri.length)
+
+      console.log('selectPicture()', index)
+      console.log('selectPicture 222', str1)
+
       this.setState({
-        image : uri
+        image : uri,
+        type : str1
       })
+
+      
       //this.uploadImage(uri, this.state.userId)
     }
+
+    
   }
 
-  getIdentifier(){
-    db.collection('Users').where('userId', '==', this.state.userId)
+  getIdentifier = async() => {
+    await db.collection('Users').where('userId', '==', this.state.userId)
     .onSnapshot((data)=>{
       data.forEach((doc)=>{
         this.setState({
-          identifier : doc.data().identifier + 1,
+          identifier : doc.data().identifier,
           docId : doc.id
         })
         console.log('identifier in getIdentifier', this.state.identifier)
       })
     })
   }
-
-  updateIdentifier(){
-    db.collection('Users').doc(this.state.docId)
+/*
+  updateIdentifier = async() => {
+    await this.setState({identifier : this.state.identifier + 1})
+    await db.collection('Users').doc(this.state.docId)
     .update({identifier : this.state.identifier})
     console.log('identifier in updateIdentifier', this.state.identifier)
   }
+*/
+  updateInfo = async() => {
+    await this.setState({identifier : this.state.identifier + 1})
+    await db.collection('Users').doc(this.state.docId)
+    .update({identifier : this.state.identifier})
+    console.log('identifier in updateIdentifier', this.state.identifier)
 
-  updateInfo(){
-    db.collection('AllPosts').add({
+
+   await db.collection('AllPosts').add({
       userId : this.state.userId,
       caption : this.state.caption,
       description : this.state.description,
       date : firebase.firestore.FieldValue.serverTimestamp(),
-      imageLink : 'allPosts/' + this.state.userId + '/' + this.state.identifier
+      
+      imageLink : 'allPosts/' + this.state.userId + '/' + this.state.identifier + this.state.type
     })
     console.log('identifier in updateInfo', this.state.identifier)
   }
@@ -82,7 +103,7 @@ export default class AddScreen extends React.Component{
   uploadImage = async(uri,imageName) => {
     var response = await fetch(uri)
     var blob = await response.blob()
-    var ref = firebase.storage().ref().child('allPosts/' + imageName + '/' + this.state.identifier )
+    var ref = firebase.storage().ref().child('allPosts/' + imageName + '/' + this.state.identifier + this.state.type )
     return(
       ref.put(blob).then(()=>{
         //this.fetchImage(imageName);
@@ -92,19 +113,7 @@ export default class AddScreen extends React.Component{
     
   }
 
-  fetchImage(imageName){
-    var ref = firebase.storage().ref().child('allPosts/' + imageName + '/' + this.state.identifier)
-    ref.getDownloadURL().then((url)=>{
-      this.setState({
-        image : url
-      })
-    })
-    .catch(()=>{
-      this.setState({
-        image : '#'
-      })
-    })
-  }
+  
 
 
   componentDidMount(){
@@ -115,8 +124,7 @@ export default class AddScreen extends React.Component{
   render(){
       
     return(
-        <View>
-
+        <View style = {{backgroundColor : '#81B7B1'}}>
           <Avatar
           source = {{uri : this.state.image}}
           size = 'xlarge'
@@ -124,22 +132,26 @@ export default class AddScreen extends React.Component{
             this.selectPicture()
           }}
           showEditButton
+          containerStyle = {styles.pictureStyle}
           //containerStyle = {{}}
           />
 
           <TextInput
           placeholder = 'Enter the short caption here.'
+          style = {styles.shortStyle}
           onChangeText = {(text)=>{
             this.setState({
               caption : text
             })
           }}
-          maxLength = {10}
+          maxLength = {20}
           />
 
 
           <TextInput
           placeholder = 'Enter the long description here.'
+          multiline
+          style = {styles.longStyle}
           onChangeText = {(text)=>{
             this.setState({
               description : text
@@ -147,17 +159,20 @@ export default class AddScreen extends React.Component{
           }}
           />
 
-          <TouchableOpacity style = {{backgroundColor : 'black'}}
+          <TouchableOpacity style = {styles.postButton}
           onPress = {()=>{
-            this.updateIdentifier()
+           // this.updateIdentifier()
             this.updateInfo();
             this.uploadImage(this.state.image, this.state.userId);
+            this.props.navigation.navigate('HomeScreen')
           }}
           >
-            <Text style = {{color : 'white'}}>
+            <Text style = {{color : 'white', fontSize : 20}}>
               Post!
             </Text>
           </TouchableOpacity>
+
+          <Text style = {{marginTop:400}}/>
           
         </View>
     )
@@ -194,6 +209,58 @@ logOutText: {
 fontSize: 30,
 fontWeight: "bold",
 },
+pictureStyle : {
+  backgroundColor : 'black', 
+  alignSelf :'center', 
+  marginTop : 100,
+  width : 220,
+  height : 220,
+},
+shortStyle : {
+  width:"75%",
+  height:35,
+  width : 250,
+  alignSelf:'center',
+  borderColor:'#32867d',
+  borderRadius:10,
+  borderWidth:1,
+  marginTop:40,
+  padding:10,
+  color : 'white'
+
+},
+
+longStyle : {
+  width:"75%",
+  height:65,
+  width : 400,
+  alignSelf:'center',
+  borderColor:'#32867d',
+  borderRadius:10,
+  borderWidth:1,
+  marginTop:30,
+  padding:10,
+  color : 'white'
+
+},
+postButton : {
+  width:100,
+  height:50,
+  justifyContent:'center',
+  alignItems:'center',
+  alignSelf : 'center',
+  borderRadius:10,
+  backgroundColor:"#32867d",
+  shadowColor: "#000",
+  shadowOffset: {
+    width: 0,
+    height: 8,
+},
+shadowOpacity: 0.44,
+shadowRadius: 10.32,
+elevation: 16,
+marginTop:30
+}
 });
 
 /*
